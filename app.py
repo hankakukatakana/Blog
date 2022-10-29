@@ -1,16 +1,19 @@
+from email.policy import default
 from flask import Flask
 from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+import pytz
 
 app = Flask(__name__) #instans
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////blog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
 db = SQLAlchemy(app) 
 
-class Coin(db.Model):
+class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    day = db.Column(db.String(12), nullable=False)
+    created_at = db.Column(db.Datetime, nullable=False, default=datetime.now(pytz.timezone('Asia/Tokyo')))
     title = db.Column(db.String(40), nullable=False)
-    body = db.Column(db.String)
+    body = db.Column(db.String(500), nullable=False)
 
 @app.route("/")
 def home():
